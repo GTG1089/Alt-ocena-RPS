@@ -9,23 +9,23 @@ app.secret_key="very_secret_document"#War thunder reference
 db=TinyDB("db/notes.json")
 @app.route("/")
 def index():
-    zapiski = db.all()
+    notes = db.all()
     msg = session.pop('msg', None)
-    return render_template("index.html", zapiski=zapiski, msg=msg)
+    return render_template("index.html", notes=notes, msg=msg)
 @app.route("/dodajzapiske", methods=["POST"])
 def add():
-    naslov=request.form.get('naslov')
+    naslov=request.form.get("naslov")
     vsebina=request.form.get("vsebina")
     if naslov and vsebina:
         db.insert({"naslov":naslov, "vsebina":vsebina})
         session['msg'] = "Zapisek uspešno dodan!"
     return redirect(url_for("index"))
-@app.route("/brisizapiske", methods=["POST"])
+@app.route("/brisizapiske/<int:doc_id>", methods=["POST"])
 #namesto "del" bris ker "del" zgleda da je function
 def bris_ajax(doc_id):
     db.remove(doc_ids=[doc_id])
     return jsonify({"success": True})
-@app.route("/editzapiske", methods=["POST", "GET"])
+@app.route("/editzapiske/<int:doc_id>", methods=["POST", "GET"])
 def edit(doc_id):
     if request.method == "POST":
         naslov=request.form.get("naslov")
