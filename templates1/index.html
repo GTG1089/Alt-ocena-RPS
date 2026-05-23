@@ -29,8 +29,7 @@
             <h3>{{note.naslov}}</h3>
             <p>{{note.vsebina}}</p>
             
-            <!-- FIX: Changed zapisek.doc_id to note.doc_id -->
-            <a href="/editzapiske/{{note.doc_id}}">Edit</a>
+            #<a href="/editzapiske/{{note.doc_id}}">Edit</a>
             <button onclick="delzapisek({{note.doc_id}}, this)">Izbriši</button>
         </li>
         {%else%}
