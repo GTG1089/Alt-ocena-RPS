@@ -30,6 +30,10 @@ def edit(doc_id):
     if request.method == "POST":
         naslov=request.form.get("naslov")
         vsebina=request.form.get("vsebina")
-    return
+        db.update({"naslov":naslov, "vsebina":vsebina}, doc_ids=[doc_id])
+        session["msg"]="Zapisek uspešno updatan!"
+        return redirect(url_for("index"))
+    note=db.get(doc_id=doc_id)
+    return render_template("edit.html", note=note, doc_id=doc_id)
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
