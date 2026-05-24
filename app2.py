@@ -74,8 +74,13 @@ def add():
         return redirect(url_for("index"))
 @app.route("/brisiobjavo/<int:doc_id>", methods=["POST"])
 def bris_ajax(doc_id):
-    db.remove(doc_ids=[doc_id])
-    return jsonify({"success": True})
+    if "username" not in session:
+        return jsonify({"success": False})
+    objava=post_seznam.get(doc_id=doc_id)
+    if objava and objava["avtor"]==session["username"]:    
+        post_seznam.remove(doc_ids=[doc_id])
+        return jsonify({"success": True})
 
+    return jsonify({"success": False})
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
