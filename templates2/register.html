@@ -6,6 +6,9 @@
     <title>Register to social</title>
 </head>
 <body>
+    {%if msg%}
+        <p style="color:red;">{{ msg }}</p>
+    {%endif%}
     <h1>Registracija</h1>
     <form action="/register" method="POST">
         <label for="username">Uporabniško ime</label>

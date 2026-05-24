@@ -32,6 +32,7 @@ def register():
         
         upor_seznam.insert({"username": username, "password": pw})
         session['msg'] = "Registracija uspešna!"
+        return redirect(url_for("login"))
     msg = session.pop('msg', None)
     return render_template("register.html", msg=msg)
 @app.route("/login", methods=["GET", "POST"])
@@ -40,7 +41,7 @@ def login():
         username=request.form.get("username")
         pw=request.form.get("pw")
 
-        isci_upor=upor_seznam.search((user.username==username) & (user.pw==pw))
+        isci_upor=upor_seznam.search((user.username==username) & (user.password==pw))
         if isci_upor:
             session["username"]=username
             return redirect(url_for("index"))
