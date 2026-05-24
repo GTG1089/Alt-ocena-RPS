@@ -23,15 +23,19 @@ def init_db():
         ''')
         conn.commit
 init_db()
-
+def get_db():
+    conn = sqlite3.connect('db3/weather.db')
+    conn.row_factory = sqlite3.Row #<----- Ta koda nardi da loh stvari gledaš kot slovar (prek imen stolpcev)
+    return conn
 @app.route("/")
 def index():
-    return render_template("index.html")
+    if "username" not in session:
+        return redirect(url_for("login"))
+    return render_template("index.html", msg=session.pop('msg', None), cur_user=session["username"])
 def register():
     if request.method == "POST":
         username=request.form.get("username")
         pw=request.form.get("pw")
-
         if username and pw:
             conn = get_db()
             c=conn.cursor()
