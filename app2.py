@@ -12,10 +12,12 @@ post_seznam=db.table('objave')
 user = Query()
 @app.route("/")
 def index():
+    if "username" not in session:
+        return redirect(url_for("login"))
     objave = post_seznam.all()
     objave.reverse()
     msg = session.pop('msg', None)
-    return render_template("index.html", objave=objave, msg=msg)
+    return render_template("index.html", objave=objave, msg=msg, cur_user=session["username"])
 @app.route("/register", methods=["GET", "POST"])
 #Login/Register/logout under here
 def register():
@@ -52,6 +54,7 @@ def logout():
     session.pop('username', None)
     return redirect(url_for("login"))
 @app.route("/dodajobjavo", methods=["POST"])
+#Posts
 def add():
     naslov=request.form.get("naslov")
     vsebina=request.form.get("vsebina")

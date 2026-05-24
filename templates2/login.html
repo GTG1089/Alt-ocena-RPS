@@ -3,9 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Login to social</title>
 </head>
 <body>
-    
+    <h1>Login</h1>
+    {%if msg%}
+        <p style="color:red;">{{ msg }}</p>
+    {%endif%}
+    <form action="/login" method="post">
+        <label for="username">Uporabniško ime:</label><br>
+        <input type="text" id="username" name="username" required><br>
+
+        <label for="pw">Geslo:</label><br>
+        <input type="password" id="pw" name="pw" required><br>
+        <input type="submit" value="Prijava">
+    </form>
+    <br>
+    <a href="/register">Nimaš računa?</a>
 </body>
 </html>
