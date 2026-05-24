@@ -31,7 +31,28 @@ def get_db():
 def index():
     if "username" not in session:
         return redirect(url_for("login"))
-    return render_template("index.html", msg=session.pop('msg', None), cur_user=session["username"])
+    conn = get_db()
+    c = conn.cursor()
+    loc_base = c.execute("SELECT * FROM locations WHERE username = ?", (session["username"],)).fetchall()
+    conn.close()
+    weather_dat=[]
+    for location in loc_base:
+        url=f"http://api.openweathermap.org/data/2.5/weather?q={location['city']}&appid={API_KEY}&units=metric&lang=en"
+        response=requests.get(url).json()
+
+        if response.get("cod")==200:
+            timedlt=response["timezone"]
+            lokalni_cas=datetime.now(timezone.utc) + timedelta(seconds=timedlt)
+            cas_string = lokalni_cas.strftime('%H:%M:%S')
+
+            weather_dat.append({
+                "id": location["id"], # sqlite id
+                "city": response["name"],
+                "temp": response["main"]["temp"],
+                "description": response["weather"][0]["description"],
+                "local_time": cas_string
+            })
+    return render_template("index.html",podatki=weather_dat, msg=session.pop('msg', None), cur_user=session["username"])
 def register():
     if request.method == "POST":
         username=request.form.get("username")
