@@ -57,7 +57,7 @@ def logout():
 @app.route("/dodajobjavo", methods=["POST"])
 #Posts
 def add():
-    vsebina=request.form.get("naslov")
+    vsebina=request.form.get("besedilo")
     slika=request.files.get("slika")
     ime_slike=""
     if slika and slika.filename:
@@ -71,7 +71,7 @@ def add():
 
         })
         session["msg"]="Uspešno si objavil novo objavo!"
-        return redirect(url_for("index"))
+    return redirect(url_for("index"))
 @app.route("/brisiobjavo/<int:doc_id>", methods=["POST"])
 def bris_ajax(doc_id):
     if "username" not in session:
