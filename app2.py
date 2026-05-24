@@ -17,6 +17,7 @@ def index():
     msg = session.pop('msg', None)
     return render_template("index.html", objave=objave, msg=msg)
 @app.route("/register", methods=["GET", "POST"])
+#Login/Register/logout under here
 def register():
     if request.method == "POST":
         username=request.form.get("username")
@@ -31,6 +32,25 @@ def register():
         session['msg'] = "Registracija uspešna!"
     msg = session.pop('msg', None)
     return render_template("register.html", msg=msg)
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        username=request.form.get("username")
+        pw=request.form.get("pw")
+
+        isci_upor=upor_seznam.search((user.username==username) & (user.pw==pw))
+        if isci_upor:
+            session["username"]=username
+            return redirect(url_for("index"))
+        else:
+            session["msg"]="Napačno uporabniško ime ali geslo!"
+            return redirect(url_for("login"))
+    msg = session.pop('msg', None)
+    return render_template("login.html", msg=msg)
+@app.route("/logout")
+def logout():
+    session.pop('username', None)
+    return redirect(url_for("login"))
 @app.route("/dodajobjavo", methods=["POST"])
 def add():
     naslov=request.form.get("naslov")
