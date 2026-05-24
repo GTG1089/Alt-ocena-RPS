@@ -57,12 +57,21 @@ def logout():
 @app.route("/dodajobjavo", methods=["POST"])
 #Posts
 def add():
-    naslov=request.form.get("naslov")
-    vsebina=request.form.get("vsebina")
-    if naslov and vsebina:
-        db.insert({"naslov":naslov, "vsebina":vsebina})
-        session['msg'] = "Zapisek uspešno dodan!"
-    return redirect(url_for("index"))
+    vsebina=request.form.get("naslov")
+    slika=request.files.get("slika")
+    ime_slike=""
+    if slika and slika.filename:
+        ime_slike = slika.filename
+        slika.save("static2/"+ime_slike)
+    if vsebina:
+        post_seznam.insert({
+            "avtor": session["username"],
+            "vsebina": vsebina,
+            "slika":ime_slike
+
+        })
+        session["msg"]="Uspešno si objavil novo objavo!"
+        return redirect(url_for("index"))
 @app.route("/brisiobjavo/<int:doc_id>", methods=["POST"])
 def bris_ajax(doc_id):
     db.remove(doc_ids=[doc_id])
