@@ -53,6 +53,8 @@ def index():
                 "local_time": cas_string
             })
     return render_template("index.html",podatki=weather_dat, msg=session.pop('msg', None), cur_user=session["username"])
+#login/register/logout
+@app.route("/register", methods=["GET","POST"])
 def register():
     if request.method == "POST":
         username=request.form.get("username")
@@ -87,5 +89,40 @@ def login():
             session["msg"]="Napačno uporabniško ime ali geslo!"
             return redirect(url_for("login"))
     return render_template("login.html", msg=session.pop('msg', None))
+@app.route("/logout")
+def logout():
+    session.pop('username', None)
+    return redirect(url_for("login"))
+#saving locations
+@app.route("/add_location", methods=["POST"])
+def add_location():
+    cty=request.form.get("mesto")
+
+    if cty:
+        url= f"http://api.openweathermap.org/data/2.5/weather?q={cty}&appid={API_KEY}&units=metric&lang=em"
+        response=requests.get(url).json()
+        if response.get("cod")==200:
+            conn = get_db()
+            c = conn.cursor()
+            c.execute("INSERT INTO locations (username, city) VALUES (?, ?)", (session["username"], response["name"]))
+            conn.commit()
+            conn.close()
+            session["msg"] = f"Mesto {response['name']} uspešno dodano!"
+        else:
+            session["msg"]="Neznano mesto"
+    return redirect(url_for("index"))
+@app.route("/delete_location/<int:loc_id>", methods=["POST"])
+def delete_location():
+    if "username" not in session:
+        return jsonify({"success":False})
+    conn = get_db()
+    c = conn.cursor()
+    c.execute("DELETE FROM locations WHERE id = ? AND username = ?", (loc_id, session["username"]))
+    changes = conn.total_changes
+    conn.commit()
+    conn.close()
+    if changes>0:
+        return jsonify({"success":True})
+    return jsonify({"success":False})
 if __name__ == "__main__":
     app.run(debug=True, port=5000)

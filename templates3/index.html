@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Social</title>
+    <title>Weather</title>
 </head>
 <body>
-    <h1>Social</h1>
+    <h1>Weather dash</h1>
     <p>Prijavljen si kot: <strong>{{cur_user}}</strong> | <a href="/logout">Odjava</a></p>
     {% if msg %}
         <p style="color: rgb(255, 0, 0);"><strong>{{ msg }}</strong></p>
     {% endif %}
 
-    <h2>Dodaj novo objavo</h2>
+    <h2>Shrani kraj</h2>
     <form action="/dodajobjavo" method="POST" enctype="multipart/form-data"> <!-- #quick google, multipart/form-data je potreben da lahko gor dajes slike -->
         <label for="besedilo">Text</label><br>
         <textarea id="besedilo" name="besedilo" rows="3" required></textarea><br><br>
@@ -23,7 +23,7 @@
         <input type="submit" value="Objavi">
     </form>
     <hr>
-    <h2>Objave(vseh)</h2>
+    <h2>Shranjeni kraji</h2>
     <ul>
         {% for post in objave %}
         <li>
