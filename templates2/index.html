@@ -3,9 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Notes App</title>
 </head>
 <body>
+    <h1>Your Notes</h1>
+    {% if msg %}
+        <p style="color: rgb(255, 0, 0);"><strong>Alert:</strong> {{ msg }}</p>
+    {% endif %}
+
+    <h2>Dodaj nov zapisek</h2>
+    <form action="/dodajzapiske" method="POST">
+        <label for="naslov">Naslov:</label>
+        <!-- FIX: Changed name="title" to name="naslov" -->
+        <input type="text" id="naslov" name="naslov" required><br>
+        
+        <label for="vsebina">Vsebina:</label>
+        <textarea id="vsebina" name="vsebina" rows="5" required></textarea><br>
+        <input type="submit" value="Save">
+    </form>
+    <hr>
+    <h2>Pregled zapiskov</h2>
+    <ul>
+        {% for note in notes %}
+        <li>
+            <h3>{{note.naslov}}</h3>
+            <p>{{note.vsebina}}</p>
+            
+            <a href="/editzapiske/{{note.doc_id}}">Edit</a>
+            <button onclick="delzapisek({{note.doc_id}}, this)">Izbriši</button>
+        </li>
+        {%else%}
+        {%endfor%}
+    </ul>
     
+    <script>
+        function delzapisek(doc_id, buttonElement){
+            fetch("/brisizapiske/" + doc_id, {
+                method: "POST"
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    buttonElement.parentElement.remove();
+                }
+            })
+            .catch(error => {
+                console.error('Napaka pri brisanju', error);
+            });
+        }
+    </script>
 </body>
 </html>

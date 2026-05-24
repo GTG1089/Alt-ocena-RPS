@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Note</title>
+</head>
+<body>
+    <h1>Edit Note</h1>
+    <form action="/editzapiske/{{ doc_id }}" method="POST">
+        <label for="naslov">Naslov:</label>
+        <input type="text" id="naslov" name="naslov" value="{{note.naslov}}" required>
+        <label for="vsebina">Vsebina:</label><br>
+        <textarea for="vsebina" name="vsebina" rows="6" required>{{note.vsebina}}</textarea>
+        <input type="submit" value="Update">
+    </form>
+    <a href="/">Cancel and return to main</a>
+</body>
+</html>
