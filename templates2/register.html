@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Note</title>
+    <title>Register to social</title>
 </head>
 <body>
-    <h1>Edit Note</h1>
-    <form action="/editzapiske/{{ doc_id }}" method="POST">
-        <label for="naslov">Naslov:</label>
-        <input type="text" id="naslov" name="naslov" value="{{note.naslov}}" required>
-        <label for="vsebina">Vsebina:</label><br>
-        <textarea for="vsebina" name="vsebina" rows="6" required>{{note.vsebina}}</textarea>
-        <input type="submit" value="Update">
+    <h1>Registracija</h1>
+    <form action="/register" method="POST">
+        <label for="username">Uporabniško ime</label>
+        <input type="text" name="username" id="username" required><br>
+        <label for="pw">Geslo:</label><br>
+        <input type="password" name="pw" id="pw" required><br>
+        <input type="submit" value="Registriraj se">
     </form>
-    <a href="/">Cancel and return to main</a>
+    <a href="/login">Že imaš račun?</a>
 </body>
 </html>
