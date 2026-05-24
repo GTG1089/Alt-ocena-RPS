@@ -1,17 +1,21 @@
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
-from tinydb import TinyDB
+from tinydb import TinyDB, Query
 app = Flask(
     __name__,
-    template_folder="templates1",
-    static_folder="static1"
+    template_folder="templates2",
+    static_folder="static2"
 )
 app.secret_key="very_secret_document"#War thunder reference
-db=TinyDB("db/notes.json")
+db=TinyDB("db2/omrezje.json")
+upor_seznam=db.table('uporabniki')
+post_seznam=db.table('objave')
+user = Query()
 @app.route("/")
 def index():
-    notes = db.all()
+    objave = post_seznam.all()
+    objave.reverse()
     msg = session.pop('msg', None)
-    return render_template("index.html", notes=notes, msg=msg)
+    return render_template("index.html", objave=objave, msg=msg)
 @app.route("/dodajzapiske", methods=["POST"])
 def add():
     naslov=request.form.get("naslov")
@@ -25,15 +29,6 @@ def add():
 def bris_ajax(doc_id):
     db.remove(doc_ids=[doc_id])
     return jsonify({"success": True})
-@app.route("/editzapiske/<int:doc_id>", methods=["POST", "GET"])
-def edit(doc_id):
-    if request.method == "POST":
-        naslov=request.form.get("naslov")
-        vsebina=request.form.get("vsebina")
-        db.update({"naslov":naslov, "vsebina":vsebina}, doc_ids=[doc_id])
-        session["msg"]="Zapisek uspešno updatan!"
-        return redirect(url_for("index"))
-    note=db.get(doc_id=doc_id)
-    return render_template("edit.html", note=note, doc_id=doc_id)
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
