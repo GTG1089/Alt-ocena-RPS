@@ -1,1 +1,1 @@
-{"uporabniki": {"1": {"username": "A", "password": "AAA"}}, "objave": {}}
+{"uporabniki": {"1": {"username": "A", "password": "AAA"}, "2": {"username": "B", "password": "BBB"}}, "objave": {"2": {"avtor": "B", "vsebina": "LOLOLOL", "slika": ""}, "3": {"avtor": "A", "vsebina": "Hihihiha", "slika": "e3a72f054667be76ec0962f9317bed79.jpg"}}}

@@ -72,6 +72,7 @@ def add():
         })
         session["msg"]="Uspešno si objavil novo objavo!"
     return redirect(url_for("index"))
+#delete je extra funkcija
 @app.route("/brisiobjavo/<int:doc_id>", methods=["POST"])
 def bris_ajax(doc_id):
     if "username" not in session:
