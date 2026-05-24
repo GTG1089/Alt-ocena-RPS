@@ -1,10 +1,28 @@
-from flask import Flask, render_template, request
+import os
+import sqlite3
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify
+import requests
+from datetime import datetime, timezone, timedelta
 
 app = Flask(
     __name__,
     template_folder="templates3",
     static_folder="static3"
 )
+app.secret_key="sekritdokument"
+API_KEY="61ea5bdda483dd02d99dfd5308d8264f"
+os.makedirs("db3", exist_ok=True)
+def init_db():
+    with sqlite3.connect("db3/weather.db") as conn:
+        c=conn.cursor()
+        c.execute(''' create table if not exists users
+                  (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT UNIQUE, password TEXT)
+        ''')
+        c.execute('''CREATE TABLE IF NOT EXISTS locations 
+                  (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, city TEXT)
+        ''')
+        conn.commit
+init_db()
 
 @app.route("/")
 def index():

@@ -3,9 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Social</title>
 </head>
 <body>
+    <h1>Social</h1>
+    <p>Prijavljen si kot: <strong>{{cur_user}}</strong> | <a href="/logout">Odjava</a></p>
+    {% if msg %}
+        <p style="color: rgb(255, 0, 0);"><strong>{{ msg }}</strong></p>
+    {% endif %}
+
+    <h2>Dodaj novo objavo</h2>
+    <form action="/dodajobjavo" method="POST" enctype="multipart/form-data"> <!-- #quick google, multipart/form-data je potreben da lahko gor dajes slike -->
+        <label for="besedilo">Text</label><br>
+        <textarea id="besedilo" name="besedilo" rows="3" required></textarea><br><br>
+        
+        <label for="slika">Slika (optional):</label><br>
+        <input type="file" id="slika" name="slika" accept="image/*"><br><br>
+        
+        <input type="submit" value="Objavi">
+    </form>
+    <hr>
+    <h2>Objave(vseh)</h2>
+    <ul>
+        {% for post in objave %}
+        <li>
+            <li style="margin-bottom: 20px;">
+                <h3>Avtor: {{ post.avtor }}</h3>
+                <p>{{ post.vsebina }}</p>
+                {% if post.slika %}
+                    <img src="/static2/{{ post.slika }}" alt="Slika" style="max-width: 300px;"><br>
+                {% endif %}
+                {% if post.avtor == cur_user %}
+                    <button onclick="delzapisek({{ post.doc_id }}, this)">Izbriši</button>
+                {% endif %}
+            </li>
+            {% else %}
+            {% endfor %}
+            
+        </li>
+    </ul>
     
+    <script>
+        function delzapisek(doc_id, buttonElement){
+            fetch("/brisiobjavo/" + doc_id, {
+                method: "POST"
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    buttonElement.parentElement.remove();
+                } else {
+                    alert("Napaka pri brisanju")
+                }
+            })
+            .catch(error => {
+                console.error('Napaka pri brisanju', error);
+            });
+        }
+    </script>
 </body>
 </html>
