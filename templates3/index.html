@@ -13,39 +13,35 @@
     {% endif %}
 
     <h2>Shrani kraj</h2>
-    <form action="/dodajobjavo" method="POST" enctype="multipart/form-data"> <!-- #quick google, multipart/form-data je potreben da lahko gor dajes slike -->
-        <label for="besedilo">Text</label><br>
-        <textarea id="besedilo" name="besedilo" rows="3" required></textarea><br><br>
+    <form action="/add_location" method="POST" > 
+        <label for="mesto">Ime_kraja/mesta</label><br>
+        <input type="text" id="mesto" name="mesto" rows="1" required></textarea><br><br>
         
-        <label for="slika">Slika (optional):</label><br>
-        <input type="file" id="slika" name="slika" accept="image/*"><br><br>
-        
-        <input type="submit" value="Objavi">
+        <input type="submit" value="Dodaj">
     </form>
     <hr>
     <h2>Shranjeni kraji</h2>
     <ul>
-        {% for post in objave %}
+        {% for location in podatki %}
         <li>
             <li style="margin-bottom: 20px;">
-                <h3>Avtor: {{ post.avtor }}</h3>
-                <p>{{ post.vsebina }}</p>
-                {% if post.slika %}
-                    <img src="/static2/{{ post.slika }}" alt="Slika" style="max-width: 300px;"><br>
-                {% endif %}
-                {% if post.avtor == cur_user %}
-                    <button onclick="delzapisek({{ post.doc_id }}, this)">Izbriši</button>
-                {% endif %}
+                <p><strong>Lokacija: </strong>{{ location.city }}</p>
+                <p><strong>Trenuntni čas v mestu: </strong>{{location.local_time}}</p>
+                <p><strong>Temperatura: </strong>{{location.temp}}°C</p>
+                <p><strong>Vreme: </strong>{{location.description}}</p>
+                <p><i>Opomba: refreshaj če se lokacija ne izbriše po enemu kliku</i></p>
+                <button onclick="delete_location({{location.id}})">Izbriši lokacijo</button>
             </li>
             {% else %}
+            <li>Nimaš še nobene lokacije shranjene</li>
             {% endfor %}
             
         </li>
     </ul>
     
     <script>
-        function delzapisek(doc_id, buttonElement){
-            fetch("/brisiobjavo/" + doc_id, {
+        function delete_location(location_id, buttonElement){
+            fetch("/delete_location/" + location_id, {
                 method: "POST"
             })
             .then(response => response.json())

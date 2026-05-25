@@ -21,7 +21,7 @@ def init_db():
         c.execute('''CREATE TABLE IF NOT EXISTS locations 
                   (id INTEGER PRIMARY KEY AUTOINCREMENT, username TEXT, city TEXT)
         ''')
-        conn.commit
+        conn.commit()
 init_db()
 def get_db():
     conn = sqlite3.connect('db3/weather.db')
@@ -63,10 +63,10 @@ def register():
             conn = get_db()
             c=conn.cursor()
             #Dupe check for username
-            uporabnik=c.execute("SELECT * FROM users WHERE username=?", (username)).fetchone()           
+            uporabnik=c.execute("SELECT * FROM users WHERE username=?", (username,)).fetchone()           #vejica po username zato da je tuple
             if uporabnik:
                 session["msg"]="Uporabniško ime že obstaja!"
-                return redirect(url_for("/register"))
+                return redirect(url_for("register"))
             c.execute("INSERT INTO Users(username, password) Values(?,?)",(username,pw))
             conn.commit()
             conn.close()
@@ -99,7 +99,7 @@ def add_location():
     cty=request.form.get("mesto")
 
     if cty:
-        url= f"http://api.openweathermap.org/data/2.5/weather?q={cty}&appid={API_KEY}&units=metric&lang=em"
+        url= f"http://api.openweathermap.org/data/2.5/weather?q={cty}&appid={API_KEY}&units=metric&lang=en"
         response=requests.get(url).json()
         if response.get("cod")==200:
             conn = get_db()
@@ -112,7 +112,7 @@ def add_location():
             session["msg"]="Neznano mesto"
     return redirect(url_for("index"))
 @app.route("/delete_location/<int:loc_id>", methods=["POST"])
-def delete_location():
+def delete_location(loc_id):
     if "username" not in session:
         return jsonify({"success":False})
     conn = get_db()
@@ -126,3 +126,4 @@ def delete_location():
     return jsonify({"success":False})
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
+#maybe nared weather forecast za daterange
