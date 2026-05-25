@@ -6,7 +6,7 @@
     <title>Notes App</title>
 </head>
 <body>
-    <h1>Your Notes</h1>
+    <h1>Tvoji zapiski</h1>
     {% if msg %}
         <p style="color: rgb(255, 0, 0);"><strong>Alert:</strong> {{ msg }}</p>
     {% endif %}
@@ -14,7 +14,6 @@
     <h2>Dodaj nov zapisek</h2>
     <form action="/dodajzapiske" method="POST">
         <label for="naslov">Naslov:</label>
-        <!-- FIX: Changed name="title" to name="naslov" -->
         <input type="text" id="naslov" name="naslov" required><br>
         
         <label for="vsebina">Vsebina:</label>

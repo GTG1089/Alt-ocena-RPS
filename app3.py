@@ -3,7 +3,7 @@ import sqlite3
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 import requests
 from datetime import datetime, timezone, timedelta
-
+#Aplikacija za vreme kjer, dodaš mesto v seznam da gledaš vreme in lokalni čas mesta
 app = Flask(
     __name__,
     template_folder="templates3",
@@ -37,7 +37,7 @@ def index():
     conn.close()
     weather_dat=[]
     for location in loc_base:
-        url=f"http://api.openweathermap.org/data/2.5/weather?q={location['city']}&appid={API_KEY}&units=metric&lang=en"
+        url=f"http://api.openweathermap.org/data/2.5/weather?q={location['city']}&appid={API_KEY}&units=metric&lang=sl"
         response=requests.get(url).json()
 
         if response.get("cod")==200:

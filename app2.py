@@ -15,7 +15,7 @@ def index():
     if "username" not in session:
         return redirect(url_for("login"))
     objave = post_seznam.all()
-    objave.reverse()
+    objave.reverse()           
     msg = session.pop('msg', None)
     return render_template("index.html", objave=objave, msg=msg, cur_user=session["username"])
 @app.route("/register", methods=["GET", "POST"])
